@@ -1,6 +1,6 @@
 """
 The quality of mercy is not strained,
-It droppeth as the gentle rain from heaven.
+It drops as the gentle rain from heaven.
 """
 
 from flask_api import create_app, db
