@@ -10,10 +10,12 @@ class BaseModel:
 
 # 继承数据库对象db的模型，映射时可以直接找到db对应的数据库
 class User(db.Model, BaseModel):
+
     __tablename__ = 't_user'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), unique=True, nullable=False)
-    pwd = db.Column(db.String(128))
+    # 用哈希散列时密码字段要长一点
+    pwd = db.Column(db.String(256))
     nick_name = db.Column(db.String(32))
     phone = db.Column(db.String(20))
     email = db.Column(db.String(32))
