@@ -1,3 +1,8 @@
+"""
+The quality of mercy is not strained,
+It droppeth as the gentle rain from heaven.
+"""
+
 from flask_api import create_app, db
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
