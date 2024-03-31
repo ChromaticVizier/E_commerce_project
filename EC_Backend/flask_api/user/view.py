@@ -4,6 +4,8 @@ from flask_api import db
 from flask_api import models
 from flask_restful import Resource
 import re
+from flask_api.utils.tokens import generate_auth_token, decode_auth_token, login_required
+from flask_api.utils.message import to_dict_msg
 
 
 @user.route('/')
@@ -26,25 +28,19 @@ class User(Resource):
 
         # 验证数据完整性
         if not all([name, pwd, confirm_pwd]):
-            return {'status': 1000,
-                    'msg': 'THE data is incomplete.'}
+            return to_dict_msg(1000)
 
         # 确认完整，详细判断
         if len(name) < 1:
-            return {'status': 1002,
-                    'msg': 'The name is invalid.'}
+            return to_dict_msg(1002)
         if len(pwd) < 1:
-            return {'status': 1003,
-                    'msg': 'The password is invalid.'}
+            return to_dict_msg(1003)
         if pwd != confirm_pwd:
-            return {'status': 1004,
-                    'msg': 'The password is inconsistent.'}
+            return to_dict_msg(1004)
         if not re.match(r'1[345678]\d{9}', phone):
-            return {'status': 1005,
-                    'msg': 'The phone number is invalid.'}
+            return to_dict_msg(1005)
         if not re.match(r'^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$', email):
-            return {'status': 1006,
-                    'msg': 'The email address is invalid.'}
+            return to_dict_msg(1006)
 
         # 完整且合法，判断是否有其他问题
         try:
@@ -52,33 +48,32 @@ class User(Resource):
             usr = models.User(name=name, password=pwd, nick_name=nick_name, phone=phone, email=email)
             db.session.add(usr)
             db.session.commit()
-            return {'status': 200,
-                'msg': 'Register successfully.'}
+            return to_dict_msg(200)
 
         except Exception:
-            return {'status': 1007,
-                    'msg': 'An error occurred.'}
+            return to_dict_msg(1007)
 
 
 user_api.add_resource(User, '/user/')
 
 
 @user.route('/login/', methods=['POST'])
+@login_required
 def login():
     name = request.form.get('name')
     pwd = request.form.get('pwd')
 
     # 这个函数要求传入的都是真值(都有值)，否则报错
     if not all([name, pwd]):
-        return {'status': 1000,
-                'msg': 'The data is incomplete.'}
+        return to_dict_msg(1000)
 
     if len(name) > 1:
         usr = models.User.query.filter_by(name=name).first()
         if usr:
-            if usr.check_password(pwd):
-                return {'status': 200,
-                        'msg': 'Login Successful.'}
+            if usr.verify_password(pwd):
+                # 验证成功，生成token
+                token = generate_auth_token(usr.id, 10000000)
+                # decode_auth_token(token)
+                return to_dict_msg(200, data={'token': token})
 
-    return {'status': 1001,
-            'msg': 'The user name or password is incorrect.'}
+    return to_dict_msg(1001)

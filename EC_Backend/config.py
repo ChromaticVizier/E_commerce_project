@@ -16,6 +16,9 @@ class Config:
 
     SECRET_KEY = os.urandom(16)
 
+    # 这个盐用来测试token，防止每次重启服务时随机盐会变
+    SECRET_KEY_FOR_TESTING = 'ABCDEFGHIJKLMNOP'
+
 
 class DevelopmentConfig(Config):
     DEBUG = True
