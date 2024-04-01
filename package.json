@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "less-loader": "^12.2.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5"
+  }
+}

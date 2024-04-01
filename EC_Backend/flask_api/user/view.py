@@ -6,6 +6,7 @@ from flask_restful import Resource
 import re
 from flask_api.utils.tokens import generate_auth_token, decode_auth_token, login_required
 from flask_api.utils.message import to_dict_msg
+from flask_cors import cross_origin
 
 
 @user.route('/')
@@ -54,10 +55,8 @@ class User(Resource):
             return to_dict_msg(1007)
 
 
-user_api.add_resource(User, '/user/')
-
-
-@user.route('/login/', methods=['POST'])
+@user.route('/login', methods=['POST'])
+@cross_origin()
 @login_required
 def login():
     name = request.form.get('name')
@@ -77,3 +76,6 @@ def login():
                 return to_dict_msg(200, data={'token': token})
 
     return to_dict_msg(1001)
+
+
+user_api.add_resource(User, '/user/')
