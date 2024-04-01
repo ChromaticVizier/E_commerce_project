@@ -57,7 +57,7 @@ class User(Resource):
 
 @user.route('/login', methods=['POST'])
 @cross_origin()
-@login_required
+# @login_required
 def login():
     name = request.form.get('name')
     pwd = request.form.get('pwd')

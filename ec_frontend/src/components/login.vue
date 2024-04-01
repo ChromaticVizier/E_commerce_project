@@ -32,13 +32,20 @@ export default {
     login() {
       // 登陆前应该再验证一次数据有效性
       // 这个函数，只有整个表单都有效valid才会是true
-      this.$refs.userRef.validate(valid => {
+      this.$refs.userRef.validate(async valid => {
         // console.log(valid)
         if(!valid) return
         // 有效，登录
-        const { data: res } = this.$axios.post('/user/login', this.$qs.stringify(this.userForm))
-        // 把请求的响应赋给res
+        // 这里发的是异步请求，加一个await来等待返回结果（注意要在函数前边加上async）
+        const { data: res } = await this.$axios.post('/user/login', this.$qs.stringify(this.userForm))
+        // 把请求的响应赋给res                                     把表单转成字符串方便调试
         console.log(res)
+        // 登录成功后拿到token，存到sessionStorage里
+        window.sessionStorage.setItem('token', res.data.token)
+        // 登录成功弹窗
+        this.$msg.success(res.msg)
+        // 跳转
+        await this.$router.push('/')
       })
     }
   }
