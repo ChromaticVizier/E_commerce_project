@@ -39,13 +39,18 @@ export default {
         // 这里发的是异步请求，加一个await来等待返回结果（注意要在函数前边加上async）
         const { data: res } = await this.$axios.post('/user/login', this.$qs.stringify(this.userForm))
         // 把请求的响应赋给res                                     把表单转成字符串方便调试
-        console.log(res)
-        // 登录成功后拿到token，存到sessionStorage里
-        window.sessionStorage.setItem('token', res.data.token)
-        // 登录成功弹窗
-        this.$msg.success(res.msg)
-        // 跳转
-        await this.$router.push('/')
+        if (res.status === 200) {
+          // 登录成功后拿到token，存到sessionStorage里
+          window.sessionStorage.setItem('token', res.data.token)
+          // 登录成功弹窗
+          this.$msg.success(res.msg)
+          // 跳转
+          await this.$router.push('/home')
+        }
+        else {
+          // 不成功，直接弹错误信息
+          this.$msg.error(res.msg)
+        }
       })
     }
   }
