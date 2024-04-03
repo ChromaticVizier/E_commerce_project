@@ -40,3 +40,36 @@ class User(db.Model, BaseModel):
 
     def verify_password(self, t_pwd):
         return check_password_hash(self.pwd, t_pwd)
+
+
+class Menu(db.Model):
+    __tablename__ = 't_menu'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32), unique=True, nullable=False)
+    level = db.Column(db.Integer)
+    # 跳转地址
+    path = db.Column(db.String(32))
+    # 向上查
+    pid = db.Column(db.Integer)
+    # 向下查
+    children = db.relationship('Menu')
+
+    # 要用json格式响应前端，建立映射函数
+    def to_dict(self):
+        return {
+            'id': id,
+            'name': self.name,
+            'level': self.level,
+            'path': self.path,
+            'pid': self.pid,
+            'children': self.get_child_list()
+        }
+
+    # 获取一级子菜单
+    def get_child_list(self):
+        obj_child = self.children
+        result = []
+        for obj in obj_child:
+            result.append(obj.to_dict())
+        return result
+
