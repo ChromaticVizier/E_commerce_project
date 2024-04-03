@@ -78,4 +78,12 @@ def login():
     return to_dict_msg(1001)
 
 
+# cross_origin装饰器用于cors验证，要贴着注册写
+@user.route('/test')
+@cross_origin()
+@login_required
+def test_login_req():
+    return to_dict_msg(200)
+
+
 user_api.add_resource(User, '/user/')
