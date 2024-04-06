@@ -1,3 +1,5 @@
+from tkinter import Menu
+
 from flask_api import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
@@ -50,7 +52,7 @@ class Menu(db.Model):
     # 跳转地址
     path = db.Column(db.String(32))
     # 向上查
-    pid = db.Column(db.Integer)
+    pid = db.Column(db.Integer, db.ForeignKey('t_menu.id'))
     # 向下查
     children = db.relationship('Menu')
 

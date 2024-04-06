@@ -21,10 +21,9 @@
   <el-container class="home-container">
     <el-header>
       <div>
-        <img src="../assets/imgs/Firefox.png">
+        <img src="../assets/imgs/Firefox.png" alt="Unable to load logo.">
         <span>Backstage management system</span>
       </div>
-      <el-button @click="test">Test</el-button>
       <el-button type="primary" @click="logout">Logout</el-button>
     </el-header>
     <el-container>
