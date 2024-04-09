@@ -59,7 +59,7 @@ class Menu(db.Model):
     # 要用json格式响应前端，建立映射函数
     def to_dict(self):
         return {
-            'id': id,
+            'id': self.id,
             'name': self.name,
             'level': self.level,
             'path': self.path,

@@ -11,7 +11,7 @@ Vue.prototype.$axios = axios
 //            随意起名
 Vue.prototype.$qs = qs
 
-axios.defaults.baseURL = 'http://localhost:5000'
+// axios.defaults.baseURL = 'http://localhost:5000'
 // 让axios默认把请求发到这个地址
 
 // 请求拦截器：访问后端时拿出token并放在请求里

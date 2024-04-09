@@ -6,7 +6,6 @@ from flask_restful import Resource
 import re
 from flask_api.utils.tokens import generate_auth_token, decode_auth_token, login_required
 from flask_api.utils.message import to_dict_msg
-from flask_cors import cross_origin
 
 
 @user.route('/')
@@ -56,7 +55,6 @@ class User(Resource):
 
 
 @user.route('/login', methods=['POST'])
-@cross_origin()
 # @login_required
 def login():
     name = request.form.get('name')
@@ -80,7 +78,6 @@ def login():
 
 # cross_origin装饰器用于cors验证，要贴着注册写
 @user.route('/test')
-@cross_origin()
 @login_required
 def test_login_req():
     return to_dict_msg(200)
