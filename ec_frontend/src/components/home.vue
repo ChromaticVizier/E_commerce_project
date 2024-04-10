@@ -54,20 +54,22 @@
                  @close="handleClose"
                  background-color="#545c64"
                  text-color="#fff"
-                 active-text-color="#ffd04b">
+                 active-text-color="#ffa500">
           <el-submenu index="1" v-for="item in menuList" :key="item.id">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>{{ item.name }}</span>
             </template>
             <el-menu-item v-for="subitem in item.children" :key="subitem.id">
-              <i class="el-icon-bell"></i>
+              <i class="el-icon--right"></i>
               <span>{{ subitem.name }}</span>
             </el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view></router-view> <!--welcome页面的占位符，welcome组件会显示在这-->
+      </el-main>
     </el-container>
   </el-container>
 </template>

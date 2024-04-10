@@ -8,6 +8,7 @@ from flask_api.utils.tokens import generate_auth_token, decode_auth_token, login
 from flask_api.utils.message import to_dict_msg
 
 
+
 @user.route('/')
 def index():
     return 'Hello World!'
@@ -15,7 +16,16 @@ def index():
 
 class User(Resource):
     def get(self):
-        pass
+        # 返回自己的用户数据
+        try:
+            id1 = int(request.args.get('id').strip())
+            user1 = models.User.filter_by(id=id1).first()
+            if user1:
+                return to_dict_msg(200, user1.to_dict())
+            else:
+                return to_dict_msg(200, [], 'User not found')
+        except Exception:
+            return to_dict_msg()
 
     def post(self):
         # 接收数据
@@ -76,7 +86,6 @@ def login():
     return to_dict_msg(1001)
 
 
-# cross_origin装饰器用于cors验证，要贴着注册写
 @user.route('/test')
 @login_required
 def test_login_req():

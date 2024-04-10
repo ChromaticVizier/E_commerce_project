@@ -2,13 +2,27 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import login from '../components/login.vue'
 import home from '../components/home.vue'
+import welcome from '../components/welcome.vue'
 
 Vue.use(VueRouter)
 
 // 增加路由地址时往这里边写
 const routes = [
-  { path: '/login', component: login },
-  { path: '/home', component: home}
+  {
+    path: '/login',
+    component: login
+  },
+  {
+    path: '/home',
+    component: home,
+    redirect: '/welcome',
+    children: [
+      {
+        path: '/welcome',
+        component: welcome
+      }
+    ]
+  }
 ]
 
 const router = new VueRouter({
@@ -25,6 +39,8 @@ router.beforeEach((to, form, next) => {
   // 如果访问别的页，拿token看看是否有效
   const tokenStr = window.sessionStorage.getItem('token')
   // 如果token无效，跳到登录页
-  if(!tokenStr) return next('/login')
+  if(!tokenStr) {
+    return next('/login')
+  }
   next()
 })

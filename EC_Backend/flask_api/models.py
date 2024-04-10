@@ -43,6 +43,15 @@ class User(db.Model, BaseModel):
     def verify_password(self, t_pwd):
         return check_password_hash(self.pwd, t_pwd)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'nick name': self.nick_name,
+            'phone': self.phone,
+            'email': self.email
+        }
+
 
 class Menu(db.Model):
     __tablename__ = 't_menu'
