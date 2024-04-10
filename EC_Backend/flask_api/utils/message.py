@@ -8,10 +8,10 @@ status_msg = {
     1005: 'Phone number is invalid.',
     1006: 'E-mail is invalid.',
     1007: 'Another error occurred while registering.',
-    1008: 'Not logged in',
+    1008: 'Not logged in.',
     1009: 'Token is invalid.',
-    1010: '',
-    1011: '',
+    1010: 'Modify user errors.',
+    1011: 'Delete user errors.',
     1012: '',
 }
 

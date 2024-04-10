@@ -13,6 +13,9 @@ def index():
     return 'Hello World!'
 
 
+'''==============================用户操作=============================='''
+
+
 class User(Resource):
     def get(self):
         # 返回自己的用户数据
@@ -61,6 +64,46 @@ class User(Resource):
 
         except Exception:
             return to_dict_msg(1007)
+
+    # 要修改信息用put请求
+    def put(self):
+        try:
+            id1 = int(request.form.get('id').strip())
+            email = request.form.get('email').strip() if request.form.get('email') else None
+            phone = request.form.get('phone').strip() if request.form.get('phone') else None
+            user1 = models.User.query.get(id1)
+            if user1:
+                # 传了再改
+                if email:
+                    user1.email = email
+                if phone:
+                    user1.phone = phone
+                # 改完数据别忘提交
+                db.session.commit()
+                return to_dict_msg(200)
+            else:
+                return to_dict_msg(1010, msg='User does not exist!')
+        except Exception as e:
+            print(e)
+            return to_dict_msg(1000)
+
+    # 用于删除用户
+    def delete(self):
+        try:
+            id1 = int(request.form.get('id').strip())
+            user1 = models.User.query.get(id1)
+            if user1:
+                db.session.delete(user1)
+                db.session.commit()
+                return to_dict_msg(200, msg='User deleted!')
+            else:
+                return to_dict_msg(1011, msg='User does not exist!')
+        except Exception as e:
+            print(e)
+            return to_dict_msg(1000)
+
+
+'''==============================用户操作=============================='''
 
 
 @user.route('/login', methods=['POST'])
