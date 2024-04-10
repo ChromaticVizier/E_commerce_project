@@ -2,11 +2,10 @@ from flask import request
 from flask_api.user import user, user_api  # 这里导入的user包里的是蓝图
 from flask_api import db
 from flask_api import models
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 import re
-from flask_api.utils.tokens import generate_auth_token, decode_auth_token, login_required
+from flask_api.utils.tokens import generate_auth_token, login_required
 from flask_api.utils.message import to_dict_msg
-
 
 
 @user.route('/')
@@ -19,13 +18,13 @@ class User(Resource):
         # 返回自己的用户数据
         try:
             id1 = int(request.args.get('id').strip())
-            user1 = models.User.filter_by(id=id1).first()
+            user1 = models.User.query.filter_by(id=id1).first()
             if user1:
                 return to_dict_msg(200, user1.to_dict())
             else:
                 return to_dict_msg(200, [], 'User not found')
         except Exception:
-            return to_dict_msg()
+            return to_dict_msg(1000)
 
     def post(self):
         # 接收数据
@@ -86,6 +85,39 @@ def login():
     return to_dict_msg(1001)
 
 
+class UserList(Resource):
+    def get(self):
+        parser = reqparse.RequestParser()
+        # 用来代替request.args.get()获取参数
+        # 类似wtform验证，自动类型转换
+        #                                 这个参数必须有，指定把参数绑在哪
+        parser.add_argument('name', location='args', type=str)
+        parser.add_argument('pagenum', location='args', type=int)
+        parser.add_argument('pagesize', location='args', type=int)
+        try:
+            args = parser.parse_args()
+            name = args.get('name')
+            pagenum = args.get('pagenum') if args.get('pagenum') else 1  # 如果没传，设默认值
+            pagesize = args.get('pagesize') if args.get('pagesize') else 2
+            if name:
+                # 模糊查询姓名
+                user1 = models.User.query.filter(
+                    models.User.name.like(f'%{name}%')
+                ).paginate(page=pagenum, per_page=pagesize)  # 分页
+            else:
+                user1 = models.User.query.paginate(page=pagenum, per_page=pagesize)
+            data = {
+                'pagenum': pagenum,
+                'totalpages': user1.total,
+                'users': [u.to_dict() for u in user1.items]
+            }
+            return to_dict_msg(200, data=data)
+
+        except Exception as e:
+            print(e)
+            return to_dict_msg(1000)
+
+
 @user.route('/test')
 @login_required
 def test_login_req():
@@ -93,3 +125,4 @@ def test_login_req():
 
 
 user_api.add_resource(User, '/user/')
+user_api.add_resource(UserList, '/userlist/')
