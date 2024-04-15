@@ -2,12 +2,21 @@
   export default {
     data () {
       return {
-        menuList: []
+        menuList: [],
+        iconObj: {
+          '2 ': 'el-icon-user-solid',
+          '3 ': 'el-icon-setting',
+          '4 ': 'el-icon-s-shop',
+          '5 ': 'el-icon-s-order',
+          '6 ': 'el-icon-s-data'
+        },
+        active_path: '',
       }
     },
     created() {
       // 刚创建时就应该加载出菜单内容
       this.getMenuList()
+      this.active_path = window.sessionStorage.getItem('active_path')
     },
     methods: {
       logout() {
@@ -33,6 +42,11 @@
         this.menuList = res.data
         console.log(this.menuList)
       },
+      activate(acp) {
+        // console.log(acp.index)
+        window.sessionStorage.setItem('active_path', acp.index)  // 记住上次点的标签，等待读取，下次回溯的时候可以回来
+        this.active_path = acp.index
+      },
     }
   }
 </script>
@@ -48,21 +62,23 @@
     </el-header>
     <el-container>
       <el-aside width="200px">
-        <el-menu default-active="2"
+        <el-menu :default-active="active_path"
                  class="el-menu-vertical-demo"
                  @open="handleOpen"
                  @close="handleClose"
-                 background-color="#545c64"
-                 text-color="#fff"
-                 active-text-color="#ffa500">
-          <el-submenu index="1" v-for="item in menuList" :key="item.id">
+                 background-color="#303133"
+                 text-color="white"
+                 active-text-color="#409EFF"
+                 unique-opened
+                 router>  <!-- router 给菜单按index编号添加路由 -->
+          <el-submenu :index="item.id+''" v-for="item in menuList" :key="item.id">
             <template slot="title">
-              <i class="el-icon-location"></i>
+              <i :class="iconObj[item.id + ' ']"></i>
               <span>{{ item.name }}</span>
             </template>
-            <el-menu-item v-for="subitem in item.children" :key="subitem.id">
-              <i class="el-icon--right"></i>
-              <span>{{ subitem.name }}</span>
+            <el-menu-item :index="subItem.path+''" v-for="subItem in item.children" :key="subItem.id" @click="activate">
+              <i :class="iconObj[item.id + ' ']"></i>
+              <span>{{ subItem.name }}</span>
             </el-menu-item>
           </el-submenu>
         </el-menu>
@@ -100,10 +116,10 @@
 }
 
 .el-main {
-  background-color: #8888;
+  background-color: grey;
 }
 
 .el-aside {
-  background-color: #999;
+  background-color: #303133;
 }
 </style>

@@ -2,7 +2,8 @@ import Vue from 'vue'
 import { Button } from 'element-ui'
 import { Form, FormItem, Input, Message } from 'element-ui'
 import { Container, Header, Aside, Main } from 'element-ui'
-import {Menu, Submenu, MenuItemGroup, MenuItem} from "element-ui";
+import { Menu, Submenu, MenuItemGroup, MenuItem } from 'element-ui'
+import { Breadcrumb, BreadcrumbItem } from 'element-ui'
 
 Vue.use(Button)
 Vue.use(Form)
@@ -16,6 +17,8 @@ Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItemGroup)
 Vue.use(MenuItem)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
 
 // 弹窗当作属性用，需要挂载
 Vue.prototype.$msg = Message
