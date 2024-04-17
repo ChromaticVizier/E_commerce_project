@@ -116,7 +116,7 @@
 }
 
 .el-main {
-  background-color: grey;
+  background-color: #d3d3d3;
 }
 
 .el-aside {
