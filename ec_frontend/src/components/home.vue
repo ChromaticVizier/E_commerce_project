@@ -76,7 +76,7 @@
               <i :class="iconObj[item.id + ' ']"></i>
               <span>{{ item.name }}</span>
             </template>
-            <el-menu-item :index="subItem.path+''" v-for="subItem in item.children" :key="subItem.id" @click="activate">
+            <el-menu-item :index="subItem.path" v-for="subItem in item.children" :key="subItem.id" @click="activate">
               <i :class="iconObj[item.id + ' ']"></i>
               <span>{{ subItem.name }}</span>
             </el-menu-item>
