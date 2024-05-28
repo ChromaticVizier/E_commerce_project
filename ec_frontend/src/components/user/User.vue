@@ -2,10 +2,21 @@
   export default {
     data() {
       return {
-        tableData: [],
+        userList: [],
     }
+  },
+  methods: {
+    async getUserList() {
+      const { data:res } = await this.$axios.get('user/userlist')
+      this.userList = res.data.users
+      console.log(this.userList)
+    }
+  },
+  created() {
+    this.getUserList()
   }
 }
+
 </script>
 
 <template>
@@ -31,13 +42,23 @@
       </el-row>
       <el-row>
         <el-col>
-          <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="id" label="ID"></el-table-column>
-            <el-table-column prop="name" label="Name"></el-table-column>
-            <el-table-column prop="nickname" label="Nickname"></el-table-column>
-            <el-table-column prop="email" label="Email"></el-table-column>
-            <el-table-column prop="phone" label="Phone"></el-table-column>
-            <el-table-column prop="actions" label="Actions"></el-table-column>
+          <el-table :data="userList" style="width: 100%">
+            <el-table-column prop="id"          label="ID"></el-table-column>
+            <el-table-column prop="name"        label="Name"></el-table-column>
+            <el-table-column prop="nick name"   label="Nickname"></el-table-column>
+            <el-table-column prop="email"       label="Email"></el-table-column>
+            <el-table-column prop="phone"       label="Phone"></el-table-column>
+            <el-table-column                    label="Actions">
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
+                <el-button
+                  size="mini"
+                  type="danger"
+                  @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+              </template>
+            </el-table-column>
           </el-table>
         </el-col>
       </el-row>
