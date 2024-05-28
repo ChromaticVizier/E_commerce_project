@@ -3,13 +3,30 @@
     data() {
       return {
         userList: [],
+        queryInfo: {
+          pagenum: 1,
+          pagesize: 10,
+        },
+        totalusernum: 0,
     }
   },
   methods: {
     async getUserList() {
-      const { data:res } = await this.$axios.get('user/userlist')
+      const { data:res } = await this.$axios.get('user/userlist', { params: this.queryInfo })
+      if (res.status !== 200) return this.$msg.error(res.msg)
+      this.totalusernum = res.data.totalpages
       this.userList = res.data.users
       console.log(this.userList)
+    },
+    handleSizeChange(val) {
+      this.queryInfo.pagesize = val
+      this.getUserList()
+      console.log(`${val} items per page`);
+    },
+    handleCurrentChange(val) {
+      this.queryInfo.pagenum = val
+      this.getUserList()
+      console.log(`current page: ${val}`);
     }
   },
   created() {
@@ -65,11 +82,11 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page.sync="currentPage4"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
+        :current-page.sync="queryInfo.pnum"
+        :page-sizes="[10, 20, 30, 50, 100, 150, 200]"
+        :page-size="queryInfo.psize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400">
+        :total="totalusernum">
       </el-pagination>
     </el-card>
   </div>
